@@ -1,0 +1,73 @@
+const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+
+module.exports = (env) => {
+  const environment = env.environment;
+  const PATH_SRC = path.join(__dirname, './src');
+  const PATH_DIST = path.join(__dirname, './dist');
+
+  return {
+    mode: environment,
+    entry: [path.join(PATH_SRC, './index.js')],
+    output: {
+      path: PATH_DIST,
+      filename: 'js/[name].[hash].js',
+    },
+    optimization: {
+      minimize: true, //Update this to true or false
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    debug: false,
+                    useBuiltIns: 'usage',
+                    corejs: 3,
+                  },
+                ],
+                ['@babel/preset-react'],
+              ],
+            },
+          },
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(PATH_SRC, './index.html'),
+      }),
+      new CleanWebpackPlugin(),
+      new CopyPlugin([
+        { from: PATH_SRC + '/public', to: PATH_DIST + '/public' },
+      ]),
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: environment,
+        },
+      }),
+    ],
+    devServer: {
+      contentBase: PATH_DIST,
+      host: 'localhost',
+      port: 8080,
+      // When using the HTML5 History API (you'll probably do this with React
+      // later), index.html should be served in place of 404 responses.
+      historyApiFallback: true,
+      overlay: {
+        errors: true,
+        warnings: true,
+      },
+    },
+  };
+};
