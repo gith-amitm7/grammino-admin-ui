@@ -8,6 +8,11 @@
     "build-prod": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --config webpack.dev.js"
   },
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "author": "Amit M",
   "license": "MIT",
   "devDependencies": {
@@ -28,10 +33,5 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
-  },
-  "dependencies": {
-    "core-js": "^3.6.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
   }
 }
